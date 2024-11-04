@@ -10,13 +10,14 @@ async function fetchTickets() { // get from html where tickets and error message
         }
         const tickets = await response.json(); // convert to json
         if (tickets.length === 0) { //check if data is empty
-            throw new Error('No utickets available'); // error if no tickets are found
+            throw new Error('No tickets available'); // error if no tickets are found
         }
         displayDetails(tickets); //call function to display detais
+    } catch (error) { // display error if fetch doesnt work and/or no tickets are found
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = `Error: ${error.message}`;
     }
-} catch (error) { // display error if fetch doesnt work and/or no tickets are found
-    errorMessage.style.display = 'block';
-    errorMessage.textContent = `Error: ${error.message}`;
+    finally { } //Task 4: Use finally to Ensure Cleanup
 }
 fetchTickets(); //call function 
 
@@ -25,13 +26,16 @@ function displayDetails(tickets) {
     const ticketContainer = document.getElementById('ticket-container');//get container to hold tickets
     ticketContainer.innerHTML = ''; //clear content in container
     tickets.forEach(ticket => {
-        const ticketDivision = document.getElementById('div');//create new division for each ticket
+        const ticketDivision = document.createElement('div');//create new division for each ticket
         const ticketID = document.createElement('h2');
         ticketID.textContent = `Ticket ID: ${ticket.id}`;//set content
         ticketDivision.appendChild(ticketID); //append to ticket id
         const customerName = document.createElement('x')// x for costumer name
         customerName.textContent = `Customer Name: ${ticket.userID}`; //set content
         ticketDivision.appendChild(customerName);//append to division
+        const issueDescription = document.createElement('p'); // Create element for issue description
+        issueDescription.textContent = `Issue Description: ${ticket.title}`; // Add issue description
+        ticketDivision.appendChild(issueDescription);
         const ticketDetails = document.createElement('x')// x fordetails
         ticketDetails.textContent = `Details: ${ticket.body}`;
         ticketDivision.appendChild(ticketDetails);
